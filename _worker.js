@@ -116,7 +116,16 @@ export default {
 							return 响应;
 						}
 					}
-					return fetch(Pages静态页面 + '/login');
+					const loginResponse = await fetch(Pages静态页面 + '/login');
+let loginHTML = await loginResponse.text();
+loginHTML = loginHTML.replace(
+    '</head>',
+    '<link rel="icon" href="https://aoso.hangdn.com/favicon/logo.png" type="image/png"><link rel="shortcut icon" href="https://aoso.hangdn.com/favicon/logo.png"></head>'
+);
+return new Response(loginHTML, {
+    status: loginResponse.status,
+    headers: { 'Content-Type': 'text/html; charset=UTF-8' }
+});
 				} else if (访问路径 === 'admin' || 访问路径.startsWith('admin/')) {//验证cookie后响应管理页面
 					const cookies = request.headers.get('Cookie') || '';
 					const authCookie = cookies.split(';').find(c => c.trim().startsWith('auth='))?.split('=')[1];
@@ -303,7 +312,16 @@ export default {
 					}
 
 					ctx.waitUntil(请求日志记录(env, request, 访问IP, 'Admin_Login', config_JSON));
-					return fetch(Pages静态页面 + '/admin' + url.search);
+					const adminResponse = await fetch(Pages静态页面 + '/admin' + url.search);
+let adminHTML = await adminResponse.text();
+adminHTML = adminHTML.replace(
+    '</head>',
+    '<link rel="icon" href="https://aoso.hangdn.com/favicon/logo.png" type="image/png"><link rel="shortcut icon" href="https://aoso.hangdn.com/favicon/logo.png"></head>'
+);
+return new Response(adminHTML, {
+    status: adminResponse.status,
+    headers: { 'Content-Type': 'text/html; charset=UTF-8' }
+});
 				} else if (访问路径 === 'logout' || uuidRegex.test(访问路径)) {
 					const 响应 = new Response('重定向中...', { status: 302, headers: { 'Location': '/login' } });
 					响应.headers.set('Set-Cookie', 'auth=; Path=/; Max-Age=0; HttpOnly');
@@ -552,6 +570,8 @@ function 生成音乐播放器页面(host) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音乐播放器 - ${host}</title>
+	<link rel="icon" href="https://aoso.hangdn.com/favicon/logo.png" type="image/png">
+    <link rel="shortcut icon" href="https://aoso.hangdn.com/favicon/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -589,7 +609,7 @@ function 生成音乐播放器页面(host) {
             box-shadow:0 20px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
             min-width:200px;
             min-height:80px;
-            max-width:600px;
+            max-width:1200px; /* 原来是600px，改大 */
             user-select:none;
             touch-action:none;
             display:none;
@@ -713,13 +733,13 @@ function 生成音乐播放器页面(host) {
             color:#fff;
         }
         #lyrics-content .current-line .typing-text {
-            display:inline-block;
-            overflow:hidden;
-            white-space:nowrap;
-            animation:typing 2s steps(40,end), blink-caret 0.75s step-end infinite;
-            border-right:2px solid #ff4500;
-            animation-fill-mode:both;
-        }
+    display:inline-block;
+    overflow:hidden;
+    white-space:nowrap;
+    animation:typing 2s steps(40,end);
+    border-right:2px solid transparent;
+    animation-fill-mode:both;
+}
         @keyframes typing { from{width:0} to{width:100%} }
         @keyframes blink-caret { from,to{border-color:transparent} 50%{border-color:#ff4500} }
         
@@ -784,12 +804,12 @@ function 生成音乐播放器页面(host) {
         .resize-handle-right:hover { background:rgba(255,255,255,0.2); }
 
         /* 胶囊按钮 */
-        #music-capsule{ position:fixed; left:22px; bottom:96px; width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:30000; background:radial-gradient(circle at 30% 30%,rgba(0,195,255,0.9),rgba(0,97,255,0.9)); box-shadow:0 8px 28px rgba(0,180,255,0.2); backdrop-filter:blur(10px); transition:all 0.3s ease; border:2px solid rgba(255,255,255,0.15); }
+        #music-capsule{ position:fixed; left:22px; bottom:96px; width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:30000; background:radial-gradient(circle at 30% 30%,rgba(0,195,255,0.9),rgba(0,97,255,0.9)); box-shadow:0 8px 28px rgba(0,180,255,0.2); backdrop-filter:blur(10px); transition:all 0.3s ease; border:2px solid rgba(255,255,255,0.15); }
         #music-capsule:hover { transform:scale(1.1); box-shadow:0 12px 32px rgba(0,180,255,0.35); }
         #music-capsule.playing{ background:radial-gradient(circle at 30% 30%,rgba(255,149,0,0.9),rgba(255,94,0,0.9)); box-shadow:0 8px 28px rgba(255,140,0,0.35); }
         #music-capsule.playing img{ animation:spin 6s linear infinite }
         @keyframes spin{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
-        #capsule-cover { width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.3); }
+        #capsule-cover { width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.3); }
         
         /* 右键菜单 */
         #right-menu{ position:fixed; display:none; z-index:40000; min-width:200px; background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); color:#fff; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); padding:6px 0; opacity:0; transform:scale(.96); transition:opacity .15s,transform .15s }
@@ -797,7 +817,7 @@ function 生成音乐播放器页面(host) {
         #right-menu li{ list-style:none; padding:10px 16px; cursor:pointer; white-space:nowrap; font-weight:600; transition:background .15s; display:flex; align-items:center; gap:12px; font-size:14px; }
         #right-menu li:hover{ background:rgba(255,255,255,0.15); border-radius:6px; color:#fff; }
         #right-menu li i { width:18px; text-align:center; font-size:14px; }
-        #right-menu::after{ content:""; position:absolute; top:-7px; left:var(--arrow-left,24px); transform:translateX(-50%); border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:7px solid rgba(255,255,255,0.12) }
+        /*#right-menu::after{ content:""; position:absolute; top:-7px; left:var(--arrow-left,24px); transform:translateX(-50%); border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:7px solid rgba(255,255,255,0.12) }*/
     </style>
 </head>
 <body>
@@ -970,8 +990,8 @@ function 生成音乐播放器页面(host) {
                     var dy = touch.clientY - startY;
                     var newW = startW, newH = startH, newL = startL, newT = startT;
                     var minW = 200, minH = 80;
-                    var maxW = window.innerWidth - 40;
-                    var maxH = window.innerHeight - 40;
+                    var maxW = 1200;   // 最大宽度1200px
+                    var maxH = 800;    // 最大高度800px
                     
                     if (resizeType === 'br' || resizeType === 'b') {
                         newH = Math.max(minH, Math.min(maxH, startH + dy));
@@ -1404,11 +1424,13 @@ function 生成默认页面(host, pathname) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${host} - 音乐代理服务</title>
+	<link rel="icon" href="https://aoso.hangdn.com/favicon/logo.png" type="image/png">
+    <link rel="shortcut icon" href="https://aoso.hangdn.com/favicon/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { margin:0; padding:0; font-family:'Segoe UI',sans-serif; background:linear-gradient(135deg,#1a2980,#26d0ce); color:white; min-height:100vh; }
         .container { max-width:1200px; margin:0 auto; padding:20px; }
-        .header { text-align:center; padding:40px 20px; background:rgba(255,255,255,0.1); border-radius:20px; margin-bottom:30px; backdrop-filter:blur(10px); }
+        .header { text-align:center; padding:40px 20px; background:rgba(255,255,255,0.1); border-radius:20px; margin-bottom:30px; backdrop-filter:blur(10px);position:relative;  /* 添加这行 */ }
         .header h1 { font-size:3rem; margin:0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); }
         .header h1 i { margin-right:10px; }
         .header p { font-size:1.2rem; opacity:0.9; margin-top:10px; }
@@ -1448,11 +1470,25 @@ function 生成默认页面(host, pathname) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 </head>
 <body>
+    <!-- GitHub 链接 - 浏览器右上角固定 -->
+    <a href="https://github.com/chnbsdan/edgetunnel" target="_blank" 
+       style="position:fixed; top:0; right:0; width:0; height:0; 
+              border-top:50px solid rgba(0,100,255,0.85);
+              border-left:50px solid transparent;
+              text-decoration:none; cursor:pointer; 
+              transition:all 0.3s ease; z-index:99999;"
+       onmouseover="this.style.borderTopColor='rgba(0,80,220,1)'; this.style.transform='scale(1.05)';"
+       onmouseout="this.style.borderTopColor='rgba(0,100,255,0.85)'; this.style.transform='scale(1)';">
+        <i class="fab fa-github" style="position:absolute; top:-44px; right:6px; 
+              color:white; font-size:20px; transform:rotate(45deg);"></i>
+    </a>
+
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-globe"></i> 音乐代理服务</h1>
             <p>高性能 Cloudflare Workers 音乐代理服务</p>
             <p><i class="fas fa-globe" style="opacity:0.6;"></i> 域名: ${host} | <i class="fas fa-folder" style="opacity:0.6;"></i> 路径: ${pathname}</p>
+			
         </div>
         <div class="content">
             <div class="card">
@@ -1487,9 +1523,9 @@ function 生成默认页面(host, pathname) {
         </div>
     </div>
     <div class="footer">
-        <p><i class="far fa-copyright"></i> 2024 ${host} - Cloudflare Workers Proxy Service</p>
-        <p>Powered by Edge Tunnel Technology <i class="fas fa-tunnel" style="opacity:0.5;"></i></p>
-    </div>
+    <p><i class="far fa-copyright"></i> 2024 <a href="https://github.com/chnbsdan/edgetunnel" target="_blank" style="color:rgba(255,255,255,0.8);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);"><i class="fab fa-github"></i> Github</a> - Cloudflare Workers Proxy Service</p>
+    <p>Powered by Edge Tunnel Technology <i class="fas fa-tunnel" style="opacity:0.5;"></i></p>
+</div>
     
     <div id="floating-lyrics"><div class="current-line"></div><div class="next-line"></div></div>
     <div id="music-capsule" title="点击展开音乐播放器"><img id="capsule-cover" src="https://p2.music.126.net/4HGEnXVexEfF2M4WdDdfrQ==/109951166354363385.jpg" alt="封面"></div>
