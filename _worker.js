@@ -1335,7 +1335,7 @@ function 生成音乐播放器页面(host) {
             document.getElementById('menu-volup').addEventListener('click', function() { ensurePlayerAndRun(function(ap) { ap.volume(Math.min((ap.audio.volume||0.8)+0.1,1), true); }); hideRightMenuImmediate(); });
             document.getElementById('menu-voldown').addEventListener('click', function() { ensurePlayerAndRun(function(ap) { ap.volume(Math.max((ap.audio.volume||0.2)-0.1,0), true); }); hideRightMenuImmediate(); });
             document.getElementById('menu-lyrics').addEventListener('click', function() { toggleLyricsWindow(); hideRightMenuImmediate(); });
-            document.getElementById('menu-support').addEventListener('click', function() { window.open('https://1356666.xyz','_blank'); hideRightMenuImmediate(); });
+            document.getElementById('menu-support').addEventListener('click', function() { window.open('https://aoso.hangdn.com','_blank'); hideRightMenuImmediate(); });
             document.getElementById('menu-fullscreen').addEventListener('click', function() {
                 hideRightMenuImmediate();
                 if (!document.fullscreenElement) {
