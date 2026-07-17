@@ -1,4 +1,4 @@
-const Version = '2026-07-16 19:02:35';
+const Version = '2026-07-17 19:02:35';
 let config_JSON, 缓存SOCKS5白名单 = null, 调试日志打印 = false;
 let SOCKS5白名单 = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
 const Pages静态页面 = 'https://edt-pages.github.io';
@@ -600,7 +600,7 @@ function 生成音乐播放器页面(host) {
             left:100px;
             bottom:50px;
             z-index:99999;
-            background:rgba(255,255,255,0.12);
+            background:rgba(255,255,255,0.6);
             backdrop-filter:blur(30px) saturate(180%);
             -webkit-backdrop-filter:blur(30px) saturate(180%);
             padding:20px 30px;
@@ -641,15 +641,15 @@ function 生成音乐播放器页面(host) {
             gap:10px;
         }
         .lyrics-control-left .drag-handle {
-            color:rgba(255,255,255,0.5);
+            color:rgba(0,0,0,0.4);  /* 原来是 rgba(255,255,255,0.5) */
             font-size:14px;
             cursor:grab;
         }
-        .lyrics-control-left .drag-handle:hover { color:rgba(255,255,255,0.8); }
+        .lyrics-control-left .drag-handle:hover { color:rgba(187, 45, 45, 0.8); }
         .lyrics-control-left .title-text {
             font-size:12px;
             opacity:0.6;
-            color:#fff;
+            color:#333;  /* 原来是 #fff */
         }
         .lyrics-control-left .title-text i { margin-right:4px; }
         .lyrics-control-right {
@@ -659,9 +659,9 @@ function 生成音乐播放器页面(host) {
             flex-wrap:wrap;
         }
         .lyrics-control-btn {
-            background:rgba(255,255,255,0.08);
-            border:1px solid rgba(255,255,255,0.08);
-            color:rgba(255,255,255,0.6);
+            color:rgba(0,0,0,0.5);  /* 原来是 rgba(255,255,255,0.6) */
+            border:1px solid rgba(238, 14, 70, 0.08);
+            color:rgba(49, 43, 43, 0.6);
             cursor:pointer;
             padding:4px 6px;
             border-radius:6px;
@@ -674,8 +674,8 @@ function 生成音乐播放器页面(host) {
             height:28px;
         }
         .lyrics-control-btn:hover {
-            background:rgba(255,255,255,0.2);
-            color:rgba(255,255,255,0.95);
+            color:rgba(0,0,0,0.9);
+            color:rgba(116, 32, 196, 0.95);
             border-color:rgba(255,255,255,0.2);
         }
         .lyrics-control-btn.active { color:#ff8c00; }
@@ -722,15 +722,15 @@ function 生成音乐播放器页面(host) {
             line-height:1.4;
             transition:color 0.3s ease;
             text-shadow:0 0 30px rgba(255,140,0,0.1);
-            color:#fff;
+            color:#222;  /* 原来是 #fff，改成深色 */
         }
         #lyrics-content .next-line {
             opacity:0.4;
             min-height:20px;
             line-height:1.3;
-            font-size:0.7em;
+            font-size:18px;  /* 固定大小 */
             transition:color 0.3s ease;
-            color:#fff;
+            color:rgba(7, 7, 7, 1);  /* 第二行歌词颜色 - 完全不透明 */
         }
         #lyrics-content .current-line .typing-text {
     display:inline-block;
@@ -1054,13 +1054,13 @@ function 生成音乐播放器页面(host) {
             
             // === 字体大小 ===
             function updateFontSize(size) {
-                currentFontSize = Math.max(12, Math.min(60, size));
+                currentFontSize = Math.max(12, Math.min(120, size));
                 lyricsCurrent.style.fontSize = currentFontSize + 'px';
                 localStorage.setItem('lyricsFontSize', currentFontSize.toString());
             }
             
             function cycleFontSize() {
-                var sizes = [16, 20, 24, 28, 32, 36, 40, 48];
+                var sizes = [16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 90, 100];
                 var idx = sizes.indexOf(currentFontSize);
                 if (idx === -1 || idx === sizes.length - 1) idx = 0;
                 else idx++;
@@ -1519,7 +1519,7 @@ function 生成默认页面(host, pathname) {
         <div class="nav-buttons">
             <a href="/music" class="nav-button music"><i class="fas fa-music"></i> 音乐播放器</a>
             <a href="/admin" class="nav-button admin"><i class="fas fa-cog"></i> 管理面板</a>
-            <a href="/sub" class="nav-button sub"><i class="fas fa-rss"></i> 订阅服务</a>
+            <a href="/good" class="nav-button sub"><i class="fas fa-rss"></i> 订阅服务</a>
         </div>
     </div>
     <div class="footer">
