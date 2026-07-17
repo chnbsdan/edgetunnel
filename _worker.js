@@ -1,4 +1,4 @@
-const Version = '2026-07-17 19:02:35';
+const Version = '2026-07-16 19:02:35';
 let config_JSON, 缓存SOCKS5白名单 = null, 调试日志打印 = false;
 let SOCKS5白名单 = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
 const Pages静态页面 = 'https://edt-pages.github.io';
@@ -736,7 +736,7 @@ function 生成音乐播放器页面(host) {
     display:inline-block;
     overflow:hidden;
     white-space:nowrap;
-    animation:typing 2s steps(40,end);
+    animation:typing 4s steps(40,end);
     border-right:2px solid transparent;
     animation-fill-mode:both;
 }
