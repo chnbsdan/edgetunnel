@@ -1,4 +1,4 @@
-const Version = '2026-07-16 19:02:35';
+const Version = '2026-07-15 19:02:35';
 let config_JSON, 缓存SOCKS5白名单 = null, 调试日志打印 = false;
 let SOCKS5白名单 = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
 const Pages静态页面 = 'https://edt-pages.github.io';
@@ -582,9 +582,41 @@ function 生成音乐播放器页面(host) {
         .header h1 i { margin-right:10px; }
         .header p { font-size:1.2rem; opacity:0.9; margin-top:10px; }
         .container { width:100%; max-width:800px; padding:20px; margin:0 auto; }
-        .back-link { display:inline-block; margin-top:30px; padding:10px 20px; background:rgba(255,255,255,0.2); border-radius:25px; color:white; text-decoration:none; transition:all 0.3s ease; }
-        .back-link:hover { background:rgba(255,255,255,0.3); transform:translateY(-2px); }
-        .back-link i { margin-right:8px; }
+        /*.back-link { display:inline-block; margin-top:30px; padding:10px 20px; background:rgba(255,255,255,0.2); border-radius:25px; color:white; text-decoration:none; transition:all 0.3s ease; }*/
+        /* .back-link:hover { background:rgba(255,255,255,0.3); transform:translateY(-2px); }*/
+        /* .back-link i { margin-right:8px; }*/
+		/* 返回首页 - 右下角圆形按钮 */
+.home-btn {
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.2);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    font-size:22px;
+    transition:all 0.3s ease;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    z-index:9999;
+    cursor:pointer;
+}
+.home-btn:hover {
+    transform:scale(1.1);
+    background:rgba(255,255,255,0.25);
+    box-shadow:0 8px 30px rgba(0,0,0,0.3);
+    border-color:rgba(255,255,255,0.4);
+}
+.home-btn:active {
+    transform:scale(0.92);
+}
         #player-wrap { position:fixed; left:18px; bottom:92px; width:360px; max-width:calc(100% - 36px); z-index:15000; display:none; transform-origin:left bottom; }
         #player-wrap.show { display:block; animation:popIn .18s ease; }
         @keyframes popIn { from{opacity:0; transform:scale(.96)} to{opacity:1; transform:scale(1)} }
@@ -723,6 +755,7 @@ function 生成音乐播放器页面(host) {
             transition:color 0.3s ease;
             text-shadow:0 0 30px rgba(255,140,0,0.1);
             color:#222;  /* 原来是 #fff，改成深色 */
+			font-family: '华文行楷', 'STXingkai', 'KaiTi', '楷体', cursive;
         }
         #lyrics-content .next-line {
             opacity:0.4;
@@ -731,17 +764,17 @@ function 生成音乐播放器页面(host) {
             font-size:18px;  /* 固定大小 */
             transition:color 0.3s ease;
             color:rgba(7, 7, 7, 1);  /* 第二行歌词颜色 - 完全不透明 */
+			font-family: '华文行楷', 'STXingkai', 'KaiTi', '楷体', cursive;
         }
         #lyrics-content .current-line .typing-text {
     display:inline-block;
     overflow:hidden;
     white-space:nowrap;
-    animation:typing 4s steps(40,end);
-    border-right:2px solid transparent;
+    animation:typing 2s steps(40,end);
     animation-fill-mode:both;
+    direction:ltr;
+    unicode-bidi:embed;
 }
-        @keyframes typing { from{width:0} to{width:100%} }
-        @keyframes blink-caret { from,to{border-color:transparent} 50%{border-color:#ff4500} }
         
         /* 尺寸指示器 */
         #size-indicator {
@@ -804,12 +837,12 @@ function 生成音乐播放器页面(host) {
         .resize-handle-right:hover { background:rgba(255,255,255,0.2); }
 
         /* 胶囊按钮 */
-        #music-capsule{ position:fixed; left:22px; bottom:96px; width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:30000; background:radial-gradient(circle at 30% 30%,rgba(0,195,255,0.9),rgba(0,97,255,0.9)); box-shadow:0 8px 28px rgba(0,180,255,0.2); backdrop-filter:blur(10px); transition:all 0.3s ease; border:2px solid rgba(255,255,255,0.15); }
+        #music-capsule{ position:fixed; left:22px; bottom:96px; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:30000; background:radial-gradient(circle at 30% 30%,rgba(0,195,255,0.9),rgba(0,97,255,0.9)); box-shadow:0 8px 28px rgba(0,180,255,0.2); backdrop-filter:blur(10px); transition:all 0.3s ease; border:2px solid rgba(255,255,255,0.15); }
         #music-capsule:hover { transform:scale(1.1); box-shadow:0 12px 32px rgba(0,180,255,0.35); }
         #music-capsule.playing{ background:radial-gradient(circle at 30% 30%,rgba(255,149,0,0.9),rgba(255,94,0,0.9)); box-shadow:0 8px 28px rgba(255,140,0,0.35); }
         #music-capsule.playing img{ animation:spin 6s linear infinite }
         @keyframes spin{ from{transform:rotate(0)} to{transform:rotate(360deg)} }
-        #capsule-cover { width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.3); }
+        #capsule-cover { width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.3); }
         
         /* 右键菜单 */
         #right-menu{ position:fixed; display:none; z-index:40000; min-width:200px; background:rgba(255,255,255,0.12); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); color:#fff; border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.1); padding:6px 0; opacity:0; transform:scale(.96); transition:opacity .15s,transform .15s }
@@ -873,7 +906,9 @@ function 生成音乐播放器页面(host) {
         <li id="menu-close"><i class="fas fa-times"></i> 关闭播放器</li>
     </ul>
     
-    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
+    <a href="/" class="home-btn" title="返回首页">
+    <i class="fas fa-home"></i>
+</a>
     
     <script src="https://unpkg.com/meting@2.0.1/dist/Meting.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
